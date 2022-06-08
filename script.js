@@ -77,33 +77,17 @@ document.onclick = function(e ) {
     goX = (xs - Cx - largeur)/100;
     goY = (ys - Cy - hauteur)/100;
 
-/*     agoX = (xs - ax - largeur)/100;
-    agoY = (ys - ay - hauteur)/100;
- */
-
     for(amoNo = 0; amoNo < 4; amoNo++){
-        
+        amogus[amoNo].move(Math.random()*SPlayground.offsetWidth,Math.random()*SPlayground.clientHeight);
     }
     while (iOnClique <= 100) {
         cookie.move(iOnClique * goX, iOnClique * goY);
-        /* Amogus1.move(agoX,agoY) */
         iOnClique++;
         console.log(iOnClique);
     }
     score++;
     H2Text.setScore(score);
 }
-
-n = 10;
-Test = function() {
-Cookie.move(10,10);
-n--;
-if (n > 0) {
-    setTimeout(Test,10)
-}
-n = 10;
-}
-
 
 function getOffset(el) {
     const rect = el.getBoundingClientRect();
