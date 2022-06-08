@@ -16,6 +16,8 @@ class Sprite {
         this.dom = document.getElementById(id);
         this.hauteur = this.dom.offsetHeight;
         this.largeur = this.dom.offsetWidth;
+        this.x = 0;
+        this.y = 0;
     }
     setPos(x,y) {
         if (x < 0) {
@@ -42,6 +44,9 @@ class Sprite {
         this.y += y;
         this.setPos(x,y);
     }
+    ismovepossible(x,y,sprite) {
+        
+    }
 }
 
 score = 0;
@@ -54,13 +59,12 @@ cookie = new Sprite("Cookie");
 
 amogus = [];
 
-for (i=0; i < 4; i++) {
+for (i=0; i < 5; i++) {
     amogus[i] = new Sprite("Amogus" + (i + 1));
 }
-
+action1=0
 document.onclick = function(e ) {
-    iOnClique = 1;
-
+    if(action1 == 0) {
     //Taille Cookie
     domai = document.getElementById("Cookie");
     hauteur = domai.offsetHeight/2;
@@ -74,21 +78,23 @@ document.onclick = function(e ) {
     ys = e.clientY - coords.top;
 
     //Calcule
-    goX = (xs - Cx - largeur)/100;
-    goY = (ys - Cy - hauteur)/100;
+    goX = (xs - Cx - largeur);
+    goY = (ys - Cy - hauteur);
 
-    for(amoNo = 0; amoNo < 4; amoNo++){
-        amogus[amoNo].move(Math.random()*SPlayground.offsetWidth,Math.random()*SPlayground.clientHeight);
-    }
-    while (iOnClique <= 100) {
-        cookie.move(iOnClique * goX, iOnClique * goY);
-        iOnClique++;
-        console.log(iOnClique);
-    }
+    cookie.move(goX, goY);
     score++;
     H2Text.setScore(score);
+    action1 = 1;
+} else {
+    action1 = 0;
+    for(amoNo = 0; amoNo < 5; amoNo++){
+        amoX=Math.random()*SPlayground.offsetWidth;
+        AmoY=Math.random()*SPlayground.clientHeight;
+        ismovepossible(amoX,amoY,cookie);
+        amogus[amoNo].move(amoX,AmoY);
+    }
 }
-
+}
 function getOffset(el) {
     const rect = el.getBoundingClientRect();
     return {
