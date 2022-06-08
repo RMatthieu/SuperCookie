@@ -1,9 +1,9 @@
-SCookie = document.getElementById("Cookie")
-SPlayground = document.getElementById("Playground")
-Samogus1 = document.getElementById("Amogus1")
+SCookie = document.getElementById("Cookie");
+SPlayground = document.getElementById("Playground");
+Samogus1 = document.getElementById("Amogus1");
 H2Text = document.getElementById("ScoreH2");
 
-coords = getOffset(SPlayground)
+coords = getOffset(SPlayground);
 
 
 Cookie = {x: 0, y: 0, Terrain: SCookie}
@@ -50,34 +50,46 @@ H2Text.setScore = function(score) {
     this.textContent = "Score : " + score;
 }
 
-cookie = new Sprite("Cookie")
+cookie = new Sprite("Cookie");
 
-amogus = [] 
+amogus = [];
 
 for (i=0; i < 4; i++) {
-    amogus[i] = new Sprite("Amogus" + (i + 1))
+    amogus[i] = new Sprite("Amogus" + (i + 1));
 }
 
 document.onclick = function(e ) {
+    iOnClique = 1;
 
+    //Taille Cookie
+    domai = document.getElementById("Cookie");
+    hauteur = domai.offsetHeight/2;
+    largeur = domai.offsetWidth/2;
 
-/* 
+    //Coords Cookie
+    Cx = Cookie.x; 
+    Cy = Cookie.y; 
     //Coords souris
-    x = e.clientX - coords.left;
-    y = e.clientY - coords.top;
+    xs = e.clientX - coords.left;
+    ys = e.clientY - coords.top;
 
     //Calcule
-    goX = (xs - x - largeur)/100;
-    goY = (ys - y - hauteur)/100;
+    goX = (xs - Cx - largeur)/100;
+    goY = (ys - Cy - hauteur)/100;
 
-    agoX = (xs - ax - largeur)/100;
+/*     agoX = (xs - ax - largeur)/100;
     agoY = (ys - ay - hauteur)/100;
+ */
 
-    while (i < 100) {
-        Cookie.move(goX,goY)
-        Amogus1.move(agoX,agoY)
-        i++
-    } */
+    for(amoNo = 0; amoNo < 4; amoNo++){
+        
+    }
+    while (iOnClique <= 100) {
+        cookie.move(iOnClique * goX, iOnClique * goY);
+        /* Amogus1.move(agoX,agoY) */
+        iOnClique++;
+        console.log(iOnClique);
+    }
     score++;
     H2Text.setScore(score);
 }
