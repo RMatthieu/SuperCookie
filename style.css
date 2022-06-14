@@ -21,6 +21,7 @@ html, body {
     position: absolute;
     top: 0px;
     transition: 1s;
+    border: dashed burlywood;
 }   
 
 .Amogus {
@@ -30,4 +31,5 @@ html, body {
     position: absolute;
     top: 0px;
     transition: 1s;
+    border: dashed red;
 }   

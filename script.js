@@ -19,7 +19,7 @@ class Sprite {
         this.x = 0;
         this.y = 0;
     }
-    setPos(x,y) {
+    move(x,y) {
         if (x < 0) {
             x=0;
             
@@ -39,13 +39,45 @@ class Sprite {
         this.x = x;
         this.y = y;
     }
-    move(x,y) {
-        this.x += x;
-        this.y += y;
-        this.setPos(x,y);
+    isCollision(newX,newY,sprite) {
+
+        //Compute rate
+        if (newX != sprite.x) {
+            this.delta = (newY - sprite.y)/(newX - sprite.x);
+        } else {
+            this.delta = 0;
+        }
+
+
+        //Check for every x of amongus
+        if(newX > sprite.x) {
+            for(this.abs = 0; this.abs < newX-sprite.x-1; this.abs++){
+                this.ord = this.abs * this.delta + sprite.y;
+                this.isOverCookie(this.abs, this.ord);
+            }
+        } else {
+            for(this.abs = 0; this.abs < sprite.x-newX-1; this.abs++){
+                this.ord = newY + this.abs * this.delta ;
+                this.isOverCookie(this.abs, this.ord);
+            }
+        }
+
+
     }
-    ismovepossible(x,y,sprite) {
-        
+    isOverCookie(x,y) {
+
+        //Compute Cookie Coords
+        this.domaine = document.getElementById("Cookie");
+        this.phg = {x: cookie.x, y: cookie.y};
+        this.pbd = {x: cookie.x + this.domaine.offsetWidth, y: cookie.y + this.domaine.offsetHeight};
+
+        //Check if Amongus over Cookie
+/*         console.log("x " + x + " " + this.phg.x + " " + this.pbd.x);
+        console.log("y " + y + " " + this.phg.y + " " + this.pbd.y); */
+        if (x > this.phg.x && x < this.pbd.x && y > this.phg.y && y < this.pbd.y) {
+            console.log("Crash");
+        }
+
     }
 }
 
@@ -64,6 +96,8 @@ for (i=0; i < 5; i++) {
 }
 action1=0
 document.onclick = function(e ) {
+
+    //Action 1 = Cookie move
     if(action1 == 0) {
     //Taille Cookie
     domai = document.getElementById("Cookie");
@@ -77,7 +111,7 @@ document.onclick = function(e ) {
     xs = e.clientX - coords.left;
     ys = e.clientY - coords.top;
 
-    //Calcule
+    //Calcul
     goX = (xs - Cx - largeur);
     goY = (ys - Cy - hauteur);
 
@@ -86,11 +120,12 @@ document.onclick = function(e ) {
     H2Text.setScore(score);
     action1 = 1;
 } else {
+    //Amogus move
     action1 = 0;
-    for(amoNo = 0; amoNo < 5; amoNo++){
+    for(amoNo = 0; amoNo <5; amoNo++){
         amoX=Math.random()*SPlayground.offsetWidth;
         AmoY=Math.random()*SPlayground.clientHeight;
-        ismovepossible(amoX,amoY,cookie);
+        amogus[amoNo].isCollision(amoX,AmoY,amogus[amoNo]);
         amogus[amoNo].move(amoX,AmoY);
     }
 }
