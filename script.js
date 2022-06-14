@@ -31,8 +31,8 @@ class Sprite {
             x = SPlayground.offsetWidth - this.largeur;
             
         }
-        if (y > SPlayground.clientHeight - this.hauteur) {
-            y=SPlayground.clientHeight - this.hauteur;
+        if (y > SPlayground.clientHeight) {
+            y = SPlayground.clientHeight - this.hauteur;
         }            
         this.dom.style.left = x + "px";
         this.dom.style.top = y + "px";
@@ -91,7 +91,7 @@ cookie = new Sprite("Cookie");
 
 amogus = [];
 
-for (i=0; i < 5; i++) {
+for (i=0; i < 3; i++) {
     amogus[i] = new Sprite("Amogus" + (i + 1));
 }
 action1=0
@@ -122,7 +122,7 @@ document.onclick = function(e ) {
 } else {
     //Amogus move
     action1 = 0;
-    for(amoNo = 0; amoNo <5; amoNo++){
+    for(amoNo = 0; amoNo < 3; amoNo++){
         amoX=Math.random()*SPlayground.offsetWidth;
         AmoY=Math.random()*SPlayground.clientHeight;
         amogus[amoNo].isCollision(amoX,AmoY,amogus[amoNo]);
