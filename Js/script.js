@@ -3,11 +3,18 @@ SPlayground = document.getElementById("Playground");
 Samogus1 = document.getElementById("Amogus1");
 H2Text = document.getElementById("ScoreH2");
 
+
 coords = getOffset(SPlayground);
+function getOffset(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+      left: rect.left + window.scrollX,
+      top: rect.top + window.scrollY
+    };
+}
 
 
 Cookie = {x: 0, y: 0, Terrain: SCookie}
-Amogus1 = {x: 0, y: 0, Terrain: Samogus1}
 
 isGameOver = 0;
 class Sprite {
@@ -27,42 +34,49 @@ class Sprite {
         if (y < 0) {
             y = 0;
         }
-        if (x > SPlayground.offsetWidth - this.largeur) {
-            x = SPlayground.offsetWidth - this.largeur;
+        if (x > SPlayground.offsetWidth - this.largeur - coords.left) {
+            x = SPlayground.offsetWidth - this.largeur - coords.left;
             
         }
-        if (y > SPlayground.clientHeight) {
-            y = SPlayground.clientHeight - this.hauteur;
+        if (y > SPlayground.offsetHeight - this.hauteur) {
+            y = SPlayground.offsetHeight - this.hauteur;
         }            
         this.dom.style.left = x + "px";
         this.dom.style.top = y + "px";
         this.x = x;
         this.y = y;
     }
-    isCollision(newX,newY,sprite) {
+    isCollision(newX,newY) {
 
         //Compute rate
-        if (newX != sprite.x) {
-            this.delta = (newY - sprite.y)/(newX - sprite.x);
-        } else {
-            this.delta = 0;
+        if (newX != this.x) {
+            this.delta = (newY - this.y)/(newX - this.x);
         }
-
-
         //Check for every x of amongus
-        if(newX > sprite.x) {
-            for(this.abs = 0; this.abs < newX-sprite.x-1; this.abs++){
-                this.ord = this.abs * this.delta + sprite.y;
+        if (newX == this.x) {
+            if (newY >= this.y) {
+                for (this.ord = this.y; this.ord <= newY; this.ord++) {
+                    this.isOverCookie(this.x,this.ord)
+                }
+            } else {
+                for (this.ord = this.y; this.ord >= newY; this.ord--) {
+                    this.isOverCookie(this.x,this.ord)
+                }
+            }
+        } else if(newX > this.x) {
+            for(this.abs = this.x; this.abs <= newX; this.abs++){
+                this.ord = (this.abs - this.x) * this.delta + this.y;
                 this.isOverCookie(this.abs, this.ord);
             }
         } else {
-            for(this.abs = 0; this.abs < sprite.x-newX-1; this.abs++){
-                this.ord = newY + this.abs * this.delta ;
+            for(this.abs = this.x; this.abs >= newX; this.abs--){
+                this.ord = (this.abs - this.x) * this.delta + this.y;
                 this.isOverCookie(this.abs, this.ord);
             }
         }
-
-
+        this.move(newX,newY);
+    
+    
     }
     isOverCookie(x,y) {
 
@@ -71,11 +85,7 @@ class Sprite {
         this.phg = {x: cookie.x, y: cookie.y};
         this.pbd = {x: cookie.x + this.domaine.offsetWidth, y: cookie.y + this.domaine.offsetHeight};
 
-        //Check if Amongus over Cookie
-/*         console.log("x " + x + " " + this.phg.x + " " + this.pbd.x);
-        console.log("y " + y + " " + this.phg.y + " " + this.pbd.y); */
         if (x > this.phg.x && x < this.pbd.x && y > this.phg.y && y < this.pbd.y) {
-            console.log("Crash");
             H2Text.textContent = "GAME OVER, press F5 to play again.";
             H2Text.style.color="red";
             isGameOver = 1;
@@ -98,46 +108,39 @@ for (i=0; i < 3; i++) {
     amogus[i] = new Sprite("Amogus" + (i + 1));
 }
 action1=0
+
+
 document.onclick = function(e ) {
     if (isGameOver == 0) {
-    //Action 1 = Cookie move
-    if(action1 == 0) {
-    //Taille Cookie
-    domai = document.getElementById("Cookie");
-    hauteur = domai.offsetHeight/2;
-    largeur = domai.offsetWidth/2;
+        //Action 1 = Cookie move
+        if(action1 == 0) {
+            //Taille Cookie
+            domai = document.getElementById("Cookie");
+            hauteur = domai.offsetHeight/2;
+            largeur = domai.offsetWidth/2;
 
-    //Coords Cookie
-    Cx = Cookie.x; 
-    Cy = Cookie.y; 
-    //Coords souris
-    xs = e.clientX - coords.left;
-    ys = e.clientY - coords.top;
+            //Coords souris
+            xs = e.clientX - coords.left;
+            ys = e.clientY - coords.top;
 
-    //Calcul
-    goX = (xs - Cx - largeur);
-    goY = (ys - Cy - hauteur);
+            //Calcul
+            goX = (xs - largeur);
+            goY = (ys - hauteur);
 
-    cookie.move(goX, goY);
-    score++;
-    H2Text.setScore(score);
-    action1 = 1;
-} else {
-    //Amogus move
-    action1 = 0;
-    for(amoNo = 0; amoNo < 3; amoNo++){
-        amoX=Math.random()*SPlayground.offsetWidth;
-        AmoY=Math.random()*SPlayground.clientHeight;
-        amogus[amoNo].isCollision(amoX,AmoY,amogus[amoNo]);
-        amogus[amoNo].move(amoX,AmoY);
+            cookie.move(goX, goY);
+            score++;
+            H2Text.setScore(score);
+            action1 = 1;
+        } else {
+            //Amogus move
+            action1 = 0;
+            for(amoNo = 0; amoNo < 3; amoNo++){
+                amoX=Math.random()*SPlayground.offsetWidth;
+                amoY=Math.random()*SPlayground.offsetHeight;
+                amogus[amoNo].isCollision(amoX,amoY);
+            }
+        }
     }
 }
-}
-}
-function getOffset(el) {
-    const rect = el.getBoundingClientRect();
-    return {
-      left: rect.left + window.scrollX,
-      top: rect.top + window.scrollY
-    };
-  }
+
+
